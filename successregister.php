@@ -63,7 +63,6 @@ if($_SESSION['fromSignup'] != "true"){
 			'$pregnancy','$asthma','$blood_cholesterol','$hernia','$family_problem','$relationship')";
 		
 		mysqli_query($connection, $sql);
-		mysqli_query($connection, "INSERT INTO attendance_log VALUES ('$username',now(),'$rates')");	
 		
 		$sql = "SELECT * FROM promos WHERE promo_name ='$rates' AND membership='$member'";
 		$data= mysqli_query($connection,$sql);

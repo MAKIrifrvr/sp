@@ -15,13 +15,12 @@ if(mysqli_connect_error()) echo "Connection Fail";
 		if($data && mysqli_num_rows($data)!= 0){
 			while ($rows = mysqli_fetch_row($data)){
 				if($rows[0] == $password){
-					 header("Location: profile.php");
+					// header("Location: profile.php");
+					echo "profile.php";
 					 $_SESSION['username'] = $username;
-					 exit;
+					// exit;
 				}else{
-					$_SESSION['incorrect_pass'] = "true";
-					header("Location: login.php");
-					exit;
+					echo "incorrect username/password";
 				}
 			}
 		}else if($data1 && mysqli_num_rows($data1)!= 0){
@@ -29,24 +28,25 @@ if(mysqli_connect_error()) echo "Connection Fail";
 				//echo $rows[0];
 				if($rows['password'] == $password){
 					if($rows['admin'] == 'no'){
-						header("Location: staffProfile.php");
+					//	header("Location: staffProfile.php");
+					echo "staffProfile.php";
 						$_SESSION['username'] = $username;
 						$_SESSION['role'] = 'staff';
-						exit;
+						//exit;
 					}else if($rows['admin'] == 'yes'){
-						header("Location: staffProfile.php");
+					//	header("Location: staffProfile.php");
+					echo "staffProfile.php";
 						$_SESSION['username'] = $username;
 						$_SESSION['role'] = 'admin';
-						exit;
+						//exit;
 					}					 
 				}else{
-					header("Location: index.php");
-					exit;
+					echo "incorrect username/password";
+					
 				}
 			}
 		}else{
-			header("Location: index.php");
-					exit;
+			echo "incorrect username/password";
 		}
 		
 	

@@ -2,7 +2,7 @@
 session_start();
 $connection = mysqli_connect("localhost", "root", "","red_gloves"); // Establishing Connection with Server
 if(mysqli_connect_error()) echo "Connection Fail";	
-
+	date_default_timezone_set("Asia/Manila");
 
 $username = $_SESSION['username'];
 
@@ -267,22 +267,55 @@ if($username == ''){
 		</div>
 		<div class="panel-body">
 			<div class="form-group">
+				<div class="col-xs-12" style="margin-top:10px;">
+				<table class="table table-hover" style="margin-bottom:50px;padding:20px">
+					<thead >
+						<tr>
+							<th>Current Promo / Rates</th>
+							<th>Membership</th>
+							<th>Amount</th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php
+							$sql = "SELECT * FROM promos WHERE 1";
+							$data= mysqli_query($connection,$sql);
+
+								while($row = mysqli_fetch_array($data)){
+									if($row['membership'] == 'yes'){
+										$membership = 'member';
+									}else{
+										$membership = 'non-member';
+									}
+									echo "
+										<tr>	
+											<td>".$row['promo_name']."</td>											
+											<td>$membership</td>
+											<td>".$row['value']."</td>
+										</tr>
+									";
+								}								
+						
+						?>
+					</tbody>
+				</table>
 				<form action="successEditRates.php" method="post">
 				<div class="col-xs-4" style="padding-bottom:20px">
 								<label style="color:black">Choose promo:</label>
-								<select name="promos" class = "form-control" required>
+								<select name="promos" id="promos" class = "form-control" required onchange="checkMem()">
 									<option selected disabled value >  </option>
-									<option value="monthly" > Monthly </option>
+									<option value="monthly m" > Monthly </option>
 									<option value="student monthly" > Student Monthly </option>
 									<option value="12 sessions" > 12 sessions </option>
 									<option value="8 sessions" > 8 sessions </option>
 									<option value="Regular" > Regular </option>
+									<option value="membership_fee" > Membership Fee </option>
 								</select>
 								
 							</div>
 							<div class="col-xs-4" style="padding-bottom:20px">
 							<label style="color:black">Member/Non member:</label>
-								<select name="membership" class = "form-control" required>
+								<select name="membership" id="membership" class = "form-control" required>
 									<option selected disabled value >  </option>
 									<option value="yes" > Member </option>
 									<option value="no" > Non member </option>
@@ -342,6 +375,17 @@ function SubmitFormData() {
 	 $('#myForm')[0].reset();
     });
 }
+
+function checkMem(){
+	if(document.getElementById('promos').value == 'membership_fee'){
+	document.getElementById('membership').disabled = true;
+	}else{
+	document.getElementById('membership').disabled = false;
+	}
+
+
+}
+
 </script>
 
 </body>

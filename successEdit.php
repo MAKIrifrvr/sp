@@ -10,8 +10,7 @@ if(mysqli_connect_error()) echo "Connection Fail";
 		$address = $_POST['address'];
 		$occupation = $_POST['occupation'];
 		$telephone = $_POST['telephone'];
-		$birthdayArray = explode('/', $_POST['birthday']);
-		$birthday = $birthdayArray[2].'-'.$birthdayArray[0].'-'.$birthdayArray[1];
+		$birthday =date('Y-m-d', strtotime( $_POST['birthday']));	
 		$age = $_POST['age'];
 		$sex = $_POST['sex'];
 		$weight = $_POST['weight'];
@@ -33,12 +32,14 @@ if(mysqli_connect_error()) echo "Connection Fail";
 		$hernia = $_POST['radioGroup12'];
 		$family_problem = $_POST['radioGroup13'];
 		$relationship = $_POST['emergency'];
-		$sql = "UPDATE clients SET username='$newusername',password='$password',fullname='$fullname' WHERE username='$oldusername'";		
-		mysqli_query($connection, $sql);
-		$sql = "UPDATE attendance_log SET username='$newusername' WHERE username='$oldusername'";		
+		$sql = "UPDATE clients SET username='$oldusername',password='$password',fullname='$fullname',address='$address',occupation='$occupation',
+		telephone='$telephone',birthday='$birthday',age='$age',sex='$sex',weight='$weight',height='$height',emergency_name='$emergency_name',emergency_relationship='$emergency_relationship',emergency_address='$emergency_address',health_problem='$health_problem',
+			blood_pressure='$blood_pressure',chronic_illness='$chronic_illness',physical_exercise='$physical_exercise',advise_doctor_exercise='$advise_doctor_exercise',surgery='$surgery',muscle_pain='$muscle_pain',diabetes='$diabetes',
+			pregnancy='$pregnancy',asthma='$asthma',blood_cholesterol='$blood_cholesterol',hernia='$hernia',family_problem='$family_problem',relationship='$relationship' WHERE username='$oldusername'";	
+		
 		mysqli_query($connection, $sql);
 		
-		$_SESSION['username'] = $newusername;
+		$_SESSION['username'] = $oldusername;
 		header("Location: profile.php");
 		exit;
 ?>

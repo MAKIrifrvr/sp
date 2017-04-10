@@ -124,7 +124,11 @@ if($username == ''){
 								$sql = "SELECT * FROM clients WHERE 1";
 								$data= mysqli_query($connection,$sql);
 							}else{
-								$search = $_POST['clientValue'];
+							
+								$search = $_POST['clientValue'];	
+								if($search == 'non member' || $search == 'nonmember' || $search == 'non-member'){
+									$search = 'nonmember';
+								}
 								$filter = $_POST['filter'];
 								$sql = "SELECT * FROM clients WHERE $filter REGEXP '([[:blank:][:punct:]]|^)$search([[:blank:][:punct:]]|$)'";
 								$data= mysqli_query($connection,$sql);

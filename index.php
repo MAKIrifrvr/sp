@@ -73,7 +73,7 @@ $_SESSION['fromSignup'] = 'false';
 						<div id="inc_pass" style=" margin-top:-20px; font-style: italic;height:25px;font-size: 13px; font-family: 'Roboto', sans-serif; font-weight: 600;color:red">
 							
 						</div>
-                        <input type="submit" id="btn-login" class="btn btn-danger btn-lg btn-block" value="LOG IN">
+                        <input type="button" id="btn-login" class="btn btn-danger btn-lg btn-block" value="LOG IN" onclick="Authenticate()">
 					</form>
 					<a class="signup" href="signup.php">Sign-up</a>
                     <hr>
@@ -94,5 +94,22 @@ $_SESSION['fromSignup'] = 'false';
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/bootstrap.min.js"></script>
 </body>
+
+
+<script>
+function Authenticate() {
+var username = document.getElementById('username').value;
+var password = document.getElementById('password').value;
+    $.post("authenticate.php", {username:username, password:password},
+	function(data) {
+	 if(data== "incorrect username/password"){
+		$('#inc_pass').html(data);
+	}else{
+		window.location = data;
+	}
+    });
+	
+}
+</script>
 
 </html>

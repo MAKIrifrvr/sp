@@ -3,7 +3,7 @@ session_start();
 $connection = mysqli_connect("localhost", "root", "","red_gloves"); // Establishing Connection with Server
 if(mysqli_connect_error()) echo "Connection Fail";	
 $username = $_SESSION['username'];
-
+$i = 21;
 if($username == ''){
 	header("Location:index.php");
 	exit;
@@ -209,37 +209,37 @@ while($row = mysqli_fetch_array($data)){
 								<div class="panel-body">
 								<div class="col-xs-4">Address</div>
 								<div class="col-xs-8">
-									<input style="text-align:center" type="text" id="address" class="form-control" value="" autocomplete="off"  required>
+									<input style="text-align:center" type="text" name="address" id="address" class="form-control" value="" autocomplete="off"  required>
 								</div>
 								</div>
 								<div class="panel-body">
 								<div class="col-xs-4">Occupation</div>
 								<div class="col-xs-8">
-									<input style="text-align:center" type="text" id="occupation" class="form-control" value="" autocomplete="off"  required>
+									<input style="text-align:center" type="text" name="occupation" id="occupation" class="form-control" value="" autocomplete="off"  required>
 								</div>
 								</div>
 								<div class="panel-body">
 								<div class="col-xs-4">Telephone</div>
 								<div class="col-xs-8">
-									<input style="text-align:center" type="text" id="telephone" class="form-control" value="" autocomplete="off"  required>
+									<input style="text-align:center" type="text" name="telephone" id="telephone" class="form-control" value="" autocomplete="off"  required>
 								</div>
 								</div>
 								<div class="panel-body">
 								<div class="col-xs-4">Birhtday</div>
 								<div class="col-xs-8">
-									<input style="text-align:center" type="date" id="birthday" class="form-control" value="" autocomplete="off"  required>
+									<input style="text-align:center" type="date" name="birthday" id="birthday" class="form-control" value="" autocomplete="off"  required>
 								</div>
 								</div>
 								<div class="panel-body">
 								<div class="col-xs-4">Age</div>
 								<div class="col-xs-8">
-									<input style="text-align:center" type="text" id="age" class="form-control" value="" autocomplete="off"  required>
+									<input style="text-align:center" type="text" name="age" id="age" class="form-control" value="" autocomplete="off"  required>
 								</div>
 								</div>
 								<div class="panel-body">
 								<div class="col-xs-4">Sex</div>
 								<div class="col-xs-8">
-									<select id="sex" class = "form-control" required>
+									<select name="sex" id="sex" class = "form-control" required>
 										<option selected disabled value >  </option>
 										<option value="Male" > Male </option>
 										<option value="Female" > Female </option>
@@ -249,31 +249,31 @@ while($row = mysqli_fetch_array($data)){
 								<div class="panel-body">
 								<div class="col-xs-4">Weight</div>
 								<div class="col-xs-8">
-									<input style="text-align:center" type="number" id="weight" class="form-control" value="" autocomplete="off"  required>
+									<input style="text-align:center" type="number" name="weight" id="weight" class="form-control" value="" autocomplete="off"  required>
 								</div>
 								</div>
 								<div class="panel-body">
 								<div class="col-xs-4">Height</div>
 								<div class="col-xs-8">
-									<input style="text-align:center" type="number" id="height" class="form-control" value="" autocomplete="off"  required>
+									<input style="text-align:center" type="number" name="height" id="height" class="form-control" value="" autocomplete="off"  required>
 								</div>
 								</div>
 								<div class="panel-body">
 								<div class="col-xs-4">Emergency Name</div>
 								<div class="col-xs-8">
-									<input style="text-align:center" type="text" id="emergency_name" class="form-control" value="" autocomplete="off"  required>
+									<input style="text-align:center" type="text" name="emergency_name" id="emergency_name" class="form-control" value="" autocomplete="off"  required>
 								</div>
 								</div>
 								<div class="panel-body">
 								<div class="col-xs-4">Emergency Relationship</div>
 								<div class="col-xs-8">
-									<input style="text-align:center" type="text" id="emergency_relationship" class="form-control" value="" autocomplete="off"  required>
+									<input style="text-align:center" type="text" name="emergency_relationship" id="emergency_relationship" class="form-control" value="" autocomplete="off"  required>
 								</div>
 								</div>
 								<div class="panel-body">
 								<div class="col-xs-4">Emergency Address</div>
 								<div class="col-xs-8">
-									<input style="text-align:center" type="text" id="emergency_address" class="form-control" value="" autocomplete="off"  required>
+									<input style="text-align:center" type="text" name="emergency_address" id="emergency_address" class="form-control" value="" autocomplete="off"  required>
 								</div>
 								</div>
 								<div class="panel-body">
@@ -409,9 +409,20 @@ while($row = mysqli_fetch_array($data)){
 								</div>
 								</div>
 								<div class="panel-body">
+								<div class="col-xs-7">Family member with heart problems, asthma or diabetes?</div>
+								<div class="col-xs-5">
+									<label class="radio-inline">
+										<input name="radioGroup13" id="radio25" value="yes" type="radio" required> Yes
+									</label>
+									<label class="radio-inline">
+									  <input name="radioGroup13" id="radio26" value="no" type="radio"> No
+									</label>
+								</div>
+								</div>
+								<div class="panel-body">
 								<div class="col-xs-7">If yes, Relationship:</div>
 								<div class="col-xs-5">
-									<input type="text" class="form-control" id="emergency" placeholder="If yes, relationship">
+									<input type="text" class="form-control" id="emergency" name="emergency" placeholder="If yes, relationship">
 								</div>
 								</div>
 							
@@ -751,7 +762,7 @@ while($row = mysqli_fetch_array($data)){
 			<?php
 				$sql = "SELECT * FROM clients WHERE username ='$username'";
 				$data= mysqli_query($connection,$sql);
-				$row = mysqli_fetch_array($data, MYSQLI_ASSOC);
+				$row = mysqli_fetch_array($data, MYSQLI_BOTH);
 				
 			?>
 				document.getElementById('newpassword').disabled = true;
@@ -770,8 +781,25 @@ while($row = mysqli_fetch_array($data)){
 				document.getElementById('emergency_name').value = "<?php echo $row['emergency_name']; ?>";
 				document.getElementById('emergency_relationship').value = "<?php echo $row['emergency_relationship']; ?>";
 				document.getElementById('emergency_address').value = "<?php echo $row['emergency_address']; ?>";
-			
+				document.getElementById('emergency').value = "<?php echo $row['relationship']; ?>";
+
 				
+				<?php 
+				$x = 1;
+				for($i = 21; $i <= 34 ;$i++){
+				//	echo $row[$i];
+					if($row[$i] == 'yes'){
+						echo "document.getElementById('radio$x').checked = true;";
+						$x++;
+						$x++;
+					}else{
+						$x++;
+						echo "document.getElementById('radio$x').checked = true;";
+						$x++;
+					}
+				}
+				?>
+				 
 		}
 		
 		function checkPassword(){

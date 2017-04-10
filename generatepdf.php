@@ -3,7 +3,7 @@
 	require('fpdf/fpdf.php');
 	$connection = mysqli_connect("localhost", "root", "","red_gloves"); // Establishing Connection with Server
 if(mysqli_connect_error()) echo "Connection Fail";
-
+	date_default_timezone_set("Asia/Manila");
 if(isset($_POST['print_pdf'])){
 	$pdf = new FPDF('P', 'pt', 'Letter');
 	$pdf->SetTitle("Inventory Form For Red Gloves Boxing Gym"); 
@@ -70,8 +70,10 @@ if(isset($_POST['print_pdf'])){
 	$pdf->Cell(150,20,$totalExpenses,1,1,'C',0);	
 	$pdf->Cell(300,20,'Net Income:',1,0,'C',0);
 	$pdf->Cell(150,20,$totalRevenue - $totalExpenses,1,1,'C',0);	
-
-	$pdf->Output("inventory.pdf", "I");
+	
+	$startdate = date("M-d-Y",strtotime($startdate));
+	$enddate = date("M-d-Y",strtotime($enddate));
+	$pdf->Output("inventory from $startdate to $enddate.pdf", "I");
 }else{
 	header("Location:adminInventory.php");
 	exit;
