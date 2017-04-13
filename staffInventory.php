@@ -155,7 +155,7 @@ if($username == ''){
 				</div>
 				<div class="container" style="color:black">
 					<div class="col-xs-6" style="padding:40px;">
-						<form class="form-horizontal" name="buttonprofile" action="successUpdateInventory.php" method="post">
+						<form class="form-horizontal" name="buttonprofile" action="successUpdateInventory.php" method="post" onsubmit="alert('successfully added an item to the inventory.');">
 							
 							<div class="col-xs-12" style="padding-bottom:20px">
 								<label style="color:black">Revenue / Expenses:</label>

@@ -22,6 +22,7 @@ if($_SESSION['role'] == 'staff'){
 	}else{
 		header("Location:adminInventory.php");
 	}
+
 	exit;
 	
 ?>

@@ -3,7 +3,8 @@ session_start();
 $connection = mysqli_connect("localhost", "root", "","red_gloves"); // Establishing Connection with Server
 if(mysqli_connect_error()) echo "Connection Fail";	
 $username = $_SESSION['username'];
-
+$_SESSION['revenue'] = 0;
+$_SESSION['expenses'] = 0;
 if($username == ''){
 	header("Location:index.php");
 	exit;
@@ -137,8 +138,7 @@ if($username == ''){
 								$data= mysqli_query($connection,$sql);
 								$num = 0;
 								date_default_timezone_set("Asia/Manila");
-								$_SESSION['revenue']  = 0;
-								$_SESSION['expenses'] = 0;
+								
 								
 								
 								while($row = mysqli_fetch_array($data)){

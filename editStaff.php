@@ -95,7 +95,7 @@ if($username == ''){
 											<td>".$row['username']."</td>
 											<td>".$row['password']."</td>
 											<td>".$row['name']."</td>
-											<form action=\"successUpdateStaff.php\" method=\"post\">
+											<form action=\"successUpdateStaff.php\" method=\"post\" onsubmit=\"return confirm('Do you really want to delete staff account?');\">
 											<td><input type=\"submit\" class=\"btn btn-warning\" id=\"$user\" name=\"create1\" value=\"delete\"></td>
 											<input type=\"hidden\" value=\"$user\" name=\"deleteUsername\">
 											</form>
@@ -126,11 +126,11 @@ if($username == ''){
 				</div>
 				<div class="container" style="color:black">
 					<div class="col-xs-6" style="padding:40px;">
-						<form class="form-horizontal" name="buttonprofile" action="successUpdateStaff.php" method="post">
+						<form class="form-horizontal" name="buttonprofile" action="successUpdateStaff.php" method="post" onsubmit="return confirm('Do you really want to add new staff/admin?');">
 							
 							<div class="col-xs-12" style="padding-bottom:20px">
 								<label style="color:black">Admin/Staff:</label>
-								<select name="admin" class = "form-control" required>
+								<select name="admin" id="admin" class = "form-control" required>
 									<option selected disabled value >  </option>
 									<option value="yes" > Admin </option>
 									<option value="no" > Staff </option>
@@ -258,6 +258,24 @@ if($username == ''){
 		}
 			
 		});
+		
+		function message1(form){
+				var a = document.getElementById("admin").value;
+				if(a == 'yes'){
+					a = 'an admin';
+				}else{
+					a = 'a staff';
+				}
+				var b = document.getElementById("username").value;
+				var c = document.getElementById("password").value;
+				var d = document.getElementById("name").value;
+				
+				if(confirm("username: "+b+"\npassword: "+c+"\nname: "+d+"\n\nAre you sure you want to account to be "+a+"?")){
+					return true;
+				}else{
+					return false;
+				}
+		}
 	</script>
 
 	

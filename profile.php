@@ -91,8 +91,14 @@ while($row = mysqli_fetch_array($data)){
 					<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModalNorm1" style="width:100%">View Attendance</button>
 					</div>
 					<div class="col-xs-6">
+					<?php
+						$username = $_SESSION['username'];
+						$sql = "SELECT * FROM clients WHERE username ='$username'";
+						$data= mysqli_query($connection,$sql);
+						$rates = mysqli_fetch_array($data)['rates'];
+					?>
 					<form class="form-horizontal" name="buttonprofile" action="" method="post">
-						<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModalNorm" style="width:100%">Attend Classes</button>
+						<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModalNorm" style="width:100%" >Attend Classes</button>
 					</form>
 					</div>
 					<div id="success_prompt" style="color:blue;font-style:italic;text-align:center;padding-top:50px"></div>			
@@ -120,7 +126,7 @@ while($row = mysqli_fetch_array($data)){
 					<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModalEdit" onclick="updateValue()">Edit Profile</button> 		  					
 				</div>
 			</div>
-			<form class="form-horizontal" name="member" action="beAMember.php" method="post">
+			<form class="form-horizontal" name="member" action="beAMember.php" method="post" onsubmit="alert('You are now a member of Red Gloves Boxing Gym!');">
 				<div class="modal fade" id="myModalMember" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 				<div class="modal-dialog" style="color:black">
 					<div class="modal-content">
@@ -166,7 +172,7 @@ while($row = mysqli_fetch_array($data)){
 				
 			</form>
 			
-			<form class="form-horizontal" name="edit" action="successEdit.php" method="post">
+			<form class="form-horizontal" name="edit" action="successEdit.php" method="post" onsubmit="alert('successfully updated your information.');">
 				<div class="modal fade" id="myModalEdit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 				<div class="modal-dialog" style="color:black">
 					<div class="modal-content">
@@ -692,16 +698,55 @@ while($row = mysqli_fetch_array($data)){
 							
 							if($currentDate==$nextMonth-1){
 								$expirationDate = date('M/d/Y',strtotime($dateOfPromo." +1 month"));
+								$expirationDate1 = date('Y-m-d',strtotime($dateOfPromo." +1 month"));
 							}else{
 								$expirationDate = date('M/d/Y', strtotime("last day of next month",strtotime($dateOfPromo)));
+								$expirationDate1 = date('Y-m-d', strtotime("last day of next month",strtotime($dateOfPromo)));
 							}
 							
 						}else{
 							$expirationDate = '';
 						}
 						
+						if($rates == '8 sessions'){
+							if($ACount == 7){
+								print("
+									<form action=\"successattend.php\" method=\"post\" onsubmit=\"alert('This will be your last session. Promo Expired!');\">
+								");
+							}else{
+								print("
+									<form action=\"successattend.php\" method=\"post\" >
+								");							
+							}
+						}else if($rates == '12 sessions'){
+							if($ACount == 7){
+								print("
+									<form action=\"successattend.php\" method=\"post\" onsubmit=\"alert('This will be your last session. Promo Expired!');\">
+								");
+							}else{
+								print("
+									<form action=\"successattend.php\" method=\"post\" >
+								");
+							}
+						}else if($rates == 'monthly' || $rates == 'student monthly'){
+							$dateNow = date('Y-m-d');
+							$date = (strtotime($expirationDate1) - strtotime($dateNow)) / (60 * 60 * 24);
+							if($date <= 1){
+								print("
+									<form action=\"successattend.php\" method=\"post\" onsubmit=\"alert('This will be the last day of your subscription.');\">
+								");
+							}else if($date <= 5){
+								print("
+									<form action=\"successattend.php\" method=\"post\" onsubmit=\"alert('You only have $date days before your subscription expires.');\">
+								");
+							}else{
+								print("
+									<form action=\"successattend.php\" method=\"post\">
+								");
+							}
+							
+						}
 						print("
-							<form action=\"successattend.php\" method=\"post\">
 								<div class=\"container\">
 									<div class=\"col-xs-6\" style=\"color:black;padding:50px\">
  									<table class=\"table table-hover\">
@@ -723,7 +768,7 @@ while($row = mysqli_fetch_array($data)){
 								
 								<!-- Modal Footer -->
 								<div class=\"modal-footer\">
-									<input class=\"btn btn-danger\" type=\"submit\" value=\"PROCEED\" name=\"proceed\" id=\"proceed_button\" >
+									<input class=\"btn btn-danger\" type=\"submit\" value=\"PROCEED\" name=\"proceed\" id=\"proceed_button\">
 								</div>
 							</form>
 						");
@@ -874,6 +919,8 @@ while($row = mysqli_fetch_array($data)){
 		}
 			
 		});
+		
+
 	</script>
 </body>
 

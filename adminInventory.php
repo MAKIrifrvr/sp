@@ -3,7 +3,8 @@ session_start();
 $connection = mysqli_connect("localhost", "root", "","red_gloves"); // Establishing Connection with Server
 if(mysqli_connect_error()) echo "Connection Fail";	
 	date_default_timezone_set("Asia/Manila");
-
+	$_SESSION['revenue'] = 0;
+	$_SESSION['expenses'] = 0;
 $username = $_SESSION['username'];
 
 if($username == ''){
@@ -71,55 +72,86 @@ if($username == ''){
 		</div>
 		<div class="panel-body">
 			<div class="form-group">
-				<div class="col-xs-12" style="text-align:center;font-size: 16px;font-family: 'Roboto', sans-serif;font-weight: 600;">
-					<div class="col-xs-4">
-					START DATE
-					</div>
-					<div class="col-xs-4">
-					END DATE
-					</div>	
+			<form action="" method="post">
+				<div class="col-xs-12" style="margin-bottom:20px;">
+					<select class="form-control" id="seachType" name="seachType" onchange="getSearchValue()">
+						<option selected disabled value > select type of search </option>
+						<option <?php if(isset($_POST['seachType'])){if($_POST['seachType'] == 'manually'){echo 'selected="selected"';}} ?> value="manually" > Manually </option>
+						<option <?php if(isset($_POST['seachType'])){if($_POST['seachType'] == 'daily'){echo 'selected="selected"';}} ?>value="daily" > Daily </option>
+						<option <?php if(isset($_POST['seachType'])){if($_POST['seachType'] == 'weekly'){echo 'selected="selected"';}} ?>value="weekly" > Weekly </option>
+						<option <?php if(isset($_POST['seachType'])){if($_POST['seachType'] == 'monthly'){echo 'selected="selected"';}} ?>value="monthly" > Monthly </option>
+						<option <?php if(isset($_POST['seachType'])){if($_POST['seachType'] == 'quarterly'){echo 'selected="selected"';}} ?>value="quarterly" > Quarterly </option>
+						<option <?php if(isset($_POST['seachType'])){if($_POST['seachType'] == 'annually'){echo 'selected="selected"';}} ?>value="annually" > Annually </option>
+					</select>
 				</div>
+				
 				<div class="col-xs-12">
-				<form action="" method="post">
-					<div class="col-xs-4">
-					<input type="date" class="form-control" id="startdate" name="startdate"  value="<?php echo isset($_POST['startdate']) ? $_POST['startdate'] : '' ?>">
+					<div class="col-xs-8" id="head1" style="text-align:center;display:none;font-size: 16px;font-family: 'Roboto', sans-serif;font-weight: 600;">
+						<div class="col-xs-6">
+						START DATE
+						</div>
+						<div class="col-xs-6">
+						END DATE
+						</div>	
 					</div>
-					<div class="col-xs-4">
-					<input type="date" class="form-control"  id="enddate" name="enddate"  value="<?php echo isset($_POST['enddate']) ? $_POST['enddate'] : '' ?>">
-					</div>					
-					<div class="col-xs-4">
+					<div class="col-xs-8" id="head2" style="display:none;font-size: 16px;font-family: 'Roboto', sans-serif;font-weight: 600;">
+						DATE
+					</div>
+					<div class="col-xs-8" id="head3" style="display:none;font-size: 16px;font-family: 'Roboto', sans-serif;font-weight: 600;">
+						WEEK
+					</div>
+					<div class="col-xs-8" id="head4" style="display:none;font-size: 16px;font-family: 'Roboto', sans-serif;font-weight: 600;">
+						MONTH
+					</div>
+					<div class="col-xs-8" id="head5" style="text-align:center;display:none;font-size: 16px;font-family: 'Roboto', sans-serif;font-weight: 600;">
+						<div class="col-xs-6">
+						QUARTER
+						</div>
+						<div class="col-xs-6">
+						YEAR
+						</div>	
+					</div>
+					<div class="col-xs-8" id="head6" style="display:none;font-size: 16px;font-family: 'Roboto', sans-serif;font-weight: 600;">
+						YEAR
+					</div>
+					
+					<div class="col-xs-8" id="manualDiv" style="<?php if(isset($_POST['startdate']) && $_POST['seachType'] == 'manually'){echo 'display:block';}else{echo 'display:none';} ?>">
+						<div class="col-xs-6">
+						<input type="date" class="form-control" id="startdate" name="startdate" value="<?php if(isset($_POST['startdate']) && $_POST['startdate']!=''){echo $_POST['startdate'];}?>">
+						</div>
+						<div class="col-xs-6">
+						<input type="date" class="form-control"  id="enddate" name="enddate" value="<?php if(isset($_POST['enddate']) && $_POST['enddate']!=''){echo $_POST['enddate'];}?>">
+						</div>
+					</div>
+					<div class="col-xs-8" id="dailyDiv" style="<?php if(isset($_POST['dailyDate']) && $_POST['seachType'] == 'daily'){echo 'display:block';}else{echo 'display:none';} ?>">
+					<input type="date" class="form-control" id="dailyDate" name="dailyDate"  value="<?php if(isset($_POST['dailyDate']) && $_POST['dailyDate']!=''){echo $_POST['dailyDate'];}?>">
+					</div>
+					<div class="col-xs-8" id="weeklyDiv" style="<?php if(isset($_POST['weeklyDate']) && $_POST['seachType'] == 'weekly'){echo 'display:block';}else{echo 'display:none';} ?>">
+					<input type="week" class="form-control" id="weeklyDate" name="weeklyDate" value="<?php if(isset($_POST['weeklyDate']) && $_POST['weeklyDate']!=''){echo $_POST['weeklyDate'];}?>">
+					</div>
+					<div class="col-xs-8" id="monthlyDiv" style="<?php if(isset($_POST['monthlyDate']) && $_POST['seachType'] == 'monthly'){echo 'display:block';}else{echo 'display:none';} ?>">
+					<input type="month" class="form-control" id="monthlyDate" name="monthlyDate" value="<?php if(isset($_POST['monthlyDate']) && $_POST['monthlyDate']!=''){echo $_POST['monthlyDate'];}?>">
+					</div>
+					<div class="col-xs-8" id="quarterlyDiv" style="<?php if(isset($_POST['quarterlyDate2']) && $_POST['seachType'] == 'quarterly'){echo 'display:block';}else{echo 'display:none';} ?>">
+						<div class="col-xs-6">
+							<select class="form-control" id="quarterlyDate1" name="quarterlyDate1">
+								<option selected disabled value >  </option>
+								<option <?php if(isset($_POST['quarterlyDate1'])){if($_POST['quarterlyDate1'] == '1st quarter'){echo 'selected="selected"';}} ?> value="1st quarter" > 1st Quarter </option>
+								<option <?php if(isset($_POST['quarterlyDate1'])){if($_POST['quarterlyDate1'] == '2nd quarter'){echo 'selected="selected"';}} ?> value="2nd quarter" > 2nd Quarter </option>
+								<option <?php if(isset($_POST['quarterlyDate1'])){if($_POST['quarterlyDate1'] == '3rd quarter'){echo 'selected="selected"';}} ?> value="3rd quarter" > 3rd Quarter </option>
+								<option <?php if(isset($_POST['quarterlyDate1'])){if($_POST['quarterlyDate1'] == '4th quarter'){echo 'selected="selected"';}} ?> value="4th quarter" > 4th Quarter </option>
+							</select>
+						</div>
+						<div class="col-xs-6">
+							<input class="form-control" type="number" id="quarterlyDate2" name="quarterlyDate2" min="2000" max="2099" step="1" value="<?php if(isset($_POST['quarterlyDate2']) && $_POST['quarterlyDate2']!=''){echo $_POST['quarterlyDate2'];}?>" />
+						</div>
+					</div>
+					<div class="col-xs-8" id="annuallyDiv" style="<?php if(isset($_POST['yearlyDate']) && $_POST['seachType'] == 'annually'){echo 'display:block';}else{echo 'display:none';} ?>">
+						<input class="form-control" type="number"  id="yearlyDate" name="yearlyDate" min="2000" max="2099" step="1" value="<?php if(isset($_POST['yearlyDate']) && $_POST['yearlyDate']!=''){echo $_POST['yearlyDate'];}?>" />
+					</div>
+					<div class="col-xs-4" id="searchButton" style="<?php if(isset($_POST['searchInventory'])){echo 'display:block';}else{echo 'display:none';}?>"> 
 						<input class='btn btn-danger' type="submit" value="SEARCH INVENTORY" id="searchInventory" name="searchInventory" style="width:100%">
-					</div>
-	<!--			<div class="col-xs-12" style="margin-top:20px;text-align:center;font-size: 16px;font-family: 'Roboto', sans-serif;font-weight: 600;">
-					<div class="col-xs-12">
-					or
 					</div>	
-				</div>
-				<div class="col-xs-12" style="text-align:center;font-size: 16px;font-family: 'Roboto', sans-serif;font-weight: 600;">
-					<div class="col-xs-4">
-					DATE RANGE
-					</div>
-					<div class="col-xs-4">
-					YEAR
-					</div>	
-				</div>
-					<div class="col-xs-4">
-						<select class="form-control" id="sel1">
-							<option>1st Quarter</option>
-							<option>2nd Quarter</option>
-							<option>3rd Quarter</option>
-							<option>4th Quarter</option>
-							<option>1st Semi-Annual</option>
-							<option>2nd Semi-Annual</option>
-							<option>Annual</option>
-						</select>
-					</div>
-					<div class="col-xs-4">
-						<input type="text" class="form-control" id="inventoryyear" name="inventoryyear">
-					</div>
-					<div class="col-xs-4">
-						<input class='btn btn-danger' type="submit" value="SEARCH INVENTORY" id="searchInventory" name="searchInventory" style="width:100%">
-					</div> -->
 				</form>
 
 				</div>
@@ -137,35 +169,97 @@ if($username == ''){
 					<tbody>
 						
 						<?php
-							if(isset($_POST['searchInventory'])  && $_POST['startdate']!='' && $_POST['enddate']!=''){
-								$_SESSION['startdate'] = $_POST['startdate'];
-								$_SESSION['enddate'] = $_POST['enddate'];
-								$startdate = date("Y-m-d",strtotime($_POST['startdate']));
-								$enddate = date("Y-m-d",strtotime($_POST['enddate']));
-								$sql = "SELECT * FROM inventory WHERE date BETWEEN '$startdate' AND '$enddate'";
-								$data= mysqli_query($connection,$sql);
+							if(isset($_POST['searchInventory'])){
+								$sql = '';
+								if($_POST['startdate']!='' && $_POST['enddate']!=''){
+									$startdate = date("Y-m-d",strtotime($_POST['startdate']));
+									$enddate = date("Y-m-d",strtotime($_POST['enddate']));
+									$sql = "SELECT * FROM inventory WHERE date BETWEEN '$startdate' AND '$enddate'";
+								}else if($_POST['dailyDate']!=''){
+									$startdate = $_POST['dailyDate'];
+									$sql = "SELECT * FROM inventory WHERE date='$startdate'";								
+								}else if($_POST['weeklyDate']!=''){
+									$startdate = explode('-',$_POST['weeklyDate']);
+									$year = $startdate[0];
+									$str = $startdate[1];									
+									$week = str_replace('W', '', $str);
+									$date = date_create();
+									date_isodate_set($date, $year, $week);
+									$startDay = (date_format($date, 'Y-m-d'));
+									$endDay = date('Y-m-d', strtotime("+6 day", strtotime($startDay)));
+									$sql = "SELECT * FROM inventory WHERE date BETWEEN '$startDay' AND '$endDay' ";									
+								}else if($_POST['monthlyDate']!=''){
+									$startdate = explode('-',$_POST['monthlyDate']);
+									$year = $startdate[0];
+									$month = $startdate[1];
+									$sql = "SELECT * FROM inventory WHERE Year(date) = '$year' and Month(Date) = '$month'";
+								}else if($_POST['quarterlyDate2']!='' && $_POST['quarterlyDate1']!=''){
+									$date1 = '';
+									$date2 = '';
+									if($_POST['quarterlyDate1'] == '1st quarter'){
+										$date1 = '01';
+										$date2 = '03';
+									}else if($_POST['quarterlyDate1'] == '2nd quarter'){
+										$date1 = '04';
+										$date2 = '06';
+									}else if($_POST['quarterlyDate1'] == '3rd quarter'){
+										$date1 = '07';
+										$date2 = '09';
+									}else if($_POST['quarterlyDate1'] == '4th quarter'){
+										$date1 = '10';
+										$date2 = '12';
+									}
+									$year = $_POST['quarterlyDate2'];
+									$sql = "SELECT * FROM inventory WHERE Year(Date) = '$year' and Month(Date) BETWEEN '$date1' AND '$date2'";
+								}else if($_POST['yearlyDate']!=''){
+									$startdate = $_POST['yearlyDate'];
+									$sql = "SELECT * FROM inventory WHERE YEAR(date)='$startdate'";
+								}
 								
-								echo "
-									<form action=\"generatepdf.php\" method=\"post\" target=\"_blank\">
-										<input type=\"submit\" class=\"btn btn-danger\" name=\"print_pdf\" id=\"print_pdf\" value=\"PRINT\" style=\"width:200px;margin-left:250px;margin-bottom:0px\">		
-									</form>";
-
-								while($row = mysqli_fetch_array($data)){
-									$date = date("M-d-Y",strtotime($row['date']));
+								if($sql!=''){
+									$data= mysqli_query($connection,$sql);
 									echo "
-										<tr>	
-											<td>$date</td>
-											<td>".$row['category']."</td>
-											<td>".$row['staff_name']."</td>
-											<td>".$row['label']."</td>
-											<td>".$row['amount']."</td>
-										</tr>
-									";
-								}								
+										<form action=\"generatepdf.php\" method=\"post\" target=\"_blank\">
+											<input type=\"submit\" class=\"btn btn-danger\" name=\"print_pdf\" id=\"print_pdf\" value=\"PRINT\" style=\"width:200px;margin-left:250px;margin-bottom:0px\">		
+										</form>";
+
+									while($row = mysqli_fetch_array($data)){
+										$date = date("M-d-Y",strtotime($row['date']));
+										
+										if($row['category'] == 'revenue'){
+											$_SESSION['revenue'] = $_SESSION['revenue'] + $row['amount'];
+										}else{
+											$_SESSION['expenses'] = $_SESSION['expenses'] + $row['amount'];
+										}
+										
+										echo "
+											<tr>	
+												<td>$date</td>
+												<td>".$row['category']."</td>
+												<td>".$row['staff_name']."</td>
+												<td>".$row['label']."</td>
+												<td>".$row['amount']."</td>
+											</tr>
+										";
+									}
+								}
 							}
 						?>
 					</tbody>
 				</table>	
+				<table class="table table-hover" style="width:4in;text-align:center;margin-left:150px;margin-top:50px">
+						
+						<tbody>
+							<tr>
+							<td>TOTAL REVENUE:</td>
+							<td><?php echo $_SESSION['revenue'];?> pesos </td>
+							</tr>
+							<tr>
+							<td>TOTAL EXPENSES: </td>
+							<td><?php echo $_SESSION['expenses'];?> pesos </td>
+							</tr>
+						</tbody>
+					</table>
 				</div>
 			</div>
 		</div>
@@ -186,11 +280,11 @@ if($username == ''){
 				</div>
 				<div class="container" style="color:black">
 					<div class="col-xs-6" style="padding:40px;">
-						<form class="form-horizontal" name="buttonprofile" action="successUpdateInventory.php" method="post">
+						<form class="form-horizontal" name="buttonprofile" action="successUpdateInventory.php" method="post" onsubmit="alert('successfully added an item to the inventory.');">
 							
 							<div class="col-xs-12" style="padding-bottom:20px">
 								<label style="color:black">Revenue / Expenses:</label>
-								<select name="category" class = "form-control" required>									
+								<select id="category" name="category" class = "form-control" required>									
 									<option selected value="expenses" > Expenses </option>
 									<option value="revenue" > Revenue </option>									
 								</select>
@@ -204,7 +298,7 @@ if($username == ''){
 								<input style="text-align:center" type="number" step="any" class="form-control" id='amount' name="amount" min="0" placeholder="name"  required>
 							</div>
 							<div class="pull-right" style="padding:15px">
-								<input class="btn btn-warning" type="submit" id="addInventory" name="addInventory">
+								<input class="btn btn-warning" type="submit" id="addInventory" name="addInventory" onclick="myFunction()">
 							</div>
 						</form>
 					</div>
@@ -304,7 +398,7 @@ if($username == ''){
 								<label style="color:black">Choose promo:</label>
 								<select name="promos" id="promos" class = "form-control" required onchange="checkMem()">
 									<option selected disabled value >  </option>
-									<option value="monthly m" > Monthly </option>
+									<option value="monthly" > Monthly </option>
 									<option value="student monthly" > Student Monthly </option>
 									<option value="12 sessions" > 12 sessions </option>
 									<option value="8 sessions" > 8 sessions </option>
@@ -326,7 +420,7 @@ if($username == ''){
 								<input type="number" name="value" id="value" value="" class = "form-control" min="0" required>
 							</div>
 							<div class="col-xs-12" style="padding-bottom:20px">
-								<input class="btn btn-danger" type="submit" name="editrates" id="editrates" value="SUBMIT" style="width:200px;margin-left:250px">
+								<input class="btn btn-danger" type="submit" name="editrates" id="editrates" value="SUBMIT" style="width:200px;margin-left:250px" onclick="myFunction1()">
 								<label style="color:black"></label>
 							</div>
 					</form>
@@ -381,6 +475,107 @@ function checkMem(){
 	document.getElementById('membership').disabled = true;
 	}else{
 	document.getElementById('membership').disabled = false;
+	}
+
+
+}
+
+function getSearchValue(){
+		document.getElementById('searchButton').style.display = 'block';
+		document.getElementById('startdate').value = "";
+		document.getElementById('enddate').value  = "";
+		document.getElementById('dailyDate').value  = "";
+		document.getElementById('weeklyDate').value  = "";
+		document.getElementById('monthlyDate').value  = "";
+		document.getElementById('quarterlyDate1').value  = "";
+		document.getElementById('quarterlyDate2').value  = "";
+		document.getElementById('yearlyDate').value  = "";
+		
+	if(document.getElementById('seachType').value == 'daily'){
+		document.getElementById('dailyDiv').style.display = 'block';
+		document.getElementById('weeklyDiv').style.display = 'none';
+		document.getElementById('monthlyDiv').style.display = 'none';
+		document.getElementById('quarterlyDiv').style.display = 'none';
+		document.getElementById('annuallyDiv').style.display = 'none';
+		document.getElementById('manualDiv').style.display = 'none';
+		
+		document.getElementById('head1').style.display = 'none';
+		document.getElementById('head2').style.display = 'block';
+		document.getElementById('head3').style.display = 'none';
+		document.getElementById('head4').style.display = 'none';
+		document.getElementById('head5').style.display = 'none';
+		document.getElementById('head6').style.display = 'none';
+	}else if(document.getElementById('seachType').value == 'weekly'){
+		document.getElementById('dailyDiv').style.display = 'none';
+		document.getElementById('weeklyDiv').style.display = 'block';
+		document.getElementById('monthlyDiv').style.display = 'none';
+		document.getElementById('quarterlyDiv').style.display = 'none';
+		document.getElementById('annuallyDiv').style.display = 'none';
+		document.getElementById('manualDiv').style.display = 'none';
+		
+		document.getElementById('head1').style.display = 'none';
+		document.getElementById('head2').style.display = 'none';
+		document.getElementById('head3').style.display = 'block';
+		document.getElementById('head4').style.display = 'none';
+		document.getElementById('head5').style.display = 'none';
+		document.getElementById('head6').style.display = 'none';
+	}else if(document.getElementById('seachType').value == 'monthly'){
+		document.getElementById('dailyDiv').style.display = 'none';
+		document.getElementById('weeklyDiv').style.display = 'none';
+		document.getElementById('monthlyDiv').style.display = 'block';
+		document.getElementById('quarterlyDiv').style.display = 'none';
+		document.getElementById('annuallyDiv').style.display = 'none';
+		document.getElementById('manualDiv').style.display = 'none';
+		
+		document.getElementById('head1').style.display = 'none';
+		document.getElementById('head2').style.display = 'none';
+		document.getElementById('head3').style.display = 'none';
+		document.getElementById('head4').style.display = 'block';
+		document.getElementById('head5').style.display = 'none';
+		document.getElementById('head6').style.display = 'none';
+	}else if(document.getElementById('seachType').value == 'quarterly'){
+		document.getElementById('dailyDiv').style.display = 'none';
+		document.getElementById('weeklyDiv').style.display = 'none';
+		document.getElementById('monthlyDiv').style.display = 'none';
+		document.getElementById('quarterlyDiv').style.display = 'block';
+		document.getElementById('annuallyDiv').style.display = 'none';
+		document.getElementById('manualDiv').style.display = 'none';
+		
+		document.getElementById('head1').style.display = 'none';
+		document.getElementById('head2').style.display = 'none';
+		document.getElementById('head3').style.display = 'none';
+		document.getElementById('head4').style.display = 'none';
+		document.getElementById('head5').style.display = 'block';
+		document.getElementById('head6').style.display = 'none';
+	}else if(document.getElementById('seachType').value == 'annually'){
+		document.getElementById('dailyDiv').style.display = 'none';
+		document.getElementById('weeklyDiv').style.display = 'none';
+		document.getElementById('monthlyDiv').style.display = 'none';
+		document.getElementById('quarterlyDiv').style.display = 'none';
+		document.getElementById('annuallyDiv').style.display = 'block';
+		document.getElementById('manualDiv').style.display = 'none';
+		
+		document.getElementById('head1').style.display = 'none';
+		document.getElementById('head2').style.display = 'none';
+		document.getElementById('head3').style.display = 'none';
+		document.getElementById('head4').style.display = 'none';
+		document.getElementById('head5').style.display = 'none';
+		document.getElementById('head6').style.display = 'block';
+	}else if(document.getElementById('seachType').value == 'manually'){
+		document.getElementById('dailyDiv').style.display = 'none';
+		document.getElementById('weeklyDiv').style.display = 'none';
+		document.getElementById('monthlyDiv').style.display = 'none';
+		document.getElementById('quarterlyDiv').style.display = 'none';
+		document.getElementById('annuallyDiv').style.display = 'none';
+		document.getElementById('manualDiv').style.display = 'block';
+		
+		document.getElementById('head1').style.display = 'block';
+		document.getElementById('head2').style.display = 'none';
+		document.getElementById('head3').style.display = 'none';
+		document.getElementById('head4').style.display = 'none';
+		document.getElementById('head5').style.display = 'none';
+		document.getElementById('head6').style.display = 'none';
+		
 	}
 
 
