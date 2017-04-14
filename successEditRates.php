@@ -15,6 +15,8 @@ if(mysqli_connect_error()) echo "Connection Fail";
 		
 		$sql = "UPDATE promos SET value='$value' WHERE membership='$membership' AND promo_name='$rates'";
 		mysqli_query($connection, $sql);
+		
+		$_SESSION['successEditRates'] = 1;
 	}
 	
 	header("Location:adminInventory.php");

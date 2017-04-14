@@ -4,7 +4,24 @@ $connection = mysqli_connect("localhost", "root", "","red_gloves"); // Establish
 if(mysqli_connect_error()) echo "Connection Fail";	
 $_SESSION['username'] = '';
 $_SESSION['success'] = '';
+$_SESSION['beAMember'] = '';
+$_SESSION['successEdit'] = '';
 $_SESSION['source'] = '';
+$_SESSION['regular'] = '';
+$_SESSION['addStaff'] = '';
+$_SESSION['deleteStaff'] = '';
+$_SESSION['addInventory'] = '';
+$_SESSION['successEditRates'] = '';
+$_SESSION['startdate1'] = '';
+$_SESSION['enddate1'] = '';
+$_SESSION['daily'] = '';
+$_SESSION['startDay'] = '';
+$_SESSION['endDay'] = '';
+$_SESSION['year'] = '';
+$_SESSION['month'] = '';
+$_SESSION['date1'] = '';
+$_SESSION['date2'] = '';
+$_SESSION['annual'] = '';
 $_SESSION['fromSignup'] = 'false';
 ?>
 

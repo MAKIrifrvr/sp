@@ -16,7 +16,7 @@ if(mysqli_connect_error()) echo "Connection Fail";
 					$sql = "INSERT INTO inventory VALUES ('$membershipDate','revenue','$staff','membership fee of $username','$membershipFee')";
 					mysqli_query($connection, $sql);
 					mysqli_query($connection, "UPDATE clients SET membership='member', date_of_membership='$membershipDate'");
-					
+					$_SESSION['beAMember'] = 1;
 				}header("Location:profile.php");
 					exit;
 				

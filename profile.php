@@ -19,12 +19,6 @@ while($row = mysqli_fetch_array($data)){
 }
 	if($member == 'member'){
 		$_SESSION['member'] = 'yes';
-		$nextYear = date('Y-m-d',strtotime($yearr."+1 year"));
-		$dateNow = date('Y-m-d');
-		if($dateNow == $nextYear){
-			$sql1 = "UPDATE clients SET membership='nonmember',date_of_membership=null WHERE username='$username'";
-			mysqli_query($connection,$sql1);
-		}
 	}else{
 		$_SESSION['member'] = 'no';
 	}
@@ -75,11 +69,10 @@ while($row = mysqli_fetch_array($data)){
 		</nav>
     </div> 
 		
-		
         <div class="panel panel-primary" id="panel1" style=" margin-left: auto; margin-right: auto; width: 8in;background-color: #fdfdfd; margin-top:150px;height:250px">
             <div class="panel-body">
               <div class="form-group">
-				<div class="col-xs-12">
+				<div class="col-xs-12" id= "luh">
 					<div class="col-xs-3">
 					<img alt="profile" src="img/profile.png" class="img-circle img-responsive" style="margin-left:10px;margin-bottom:10px;"> 
 					</div>
@@ -108,6 +101,42 @@ while($row = mysqli_fetch_array($data)){
 			</div>
 		
 		</div>
+		
+<div class="modal fade bs-example-modal-sm" id="myModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel"></h4>
+      </div>
+      <div class="modal-body" id="modal-body">
+    
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<?php
+	if($member == 'member'){
+		$nextYear = date('Y-m-d',strtotime($yearr."+1 year"));
+		$dateNow = date('Y-m-d');
+		$t = date("H");
+		if($dateNow == $nextYear && ($t >="23")){
+			$sql1 = "UPDATE clients SET membership='nonmember',date_of_membership=null WHERE username='$username'";
+			mysqli_query($connection,$sql1);
+			echo "<script> 
+					document.getElementById('modal-body').innerHTML = '<b>Your membership subscription expires.</b><br><br>Register again to avail free items <br>and discounts to different promos.';
+					window.setTimeout(function() {
+						$('#myModal').modal('show');
+					},1000);
+				</script>";
+		}
+	}
+?>
+
 		<div class="panel panel-primary" id="panel1" style="display:block; margin-left: auto; margin-right: auto; width: 8in;background-color: #fdfdfd; margin-top:50px;">
             <div class="panel-heading"  style="height:53px">
 				<div style="float:left;margin-top:5px">PROFILE </div>
@@ -126,7 +155,7 @@ while($row = mysqli_fetch_array($data)){
 					<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModalEdit" onclick="updateValue()">Edit Profile</button> 		  					
 				</div>
 			</div>
-			<form class="form-horizontal" name="member" action="beAMember.php" method="post" onsubmit="alert('You are now a member of Red Gloves Boxing Gym!');">
+			<form class="form-horizontal" name="member" action="beAMember.php" method="post">
 				<div class="modal fade" id="myModalMember" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 				<div class="modal-dialog" style="color:black">
 					<div class="modal-content">
@@ -172,7 +201,8 @@ while($row = mysqli_fetch_array($data)){
 				
 			</form>
 			
-			<form class="form-horizontal" name="edit" action="successEdit.php" method="post" onsubmit="alert('successfully updated your information.');">
+			
+			<form class="form-horizontal" name="edit" action="successEdit.php" method="post" >
 				<div class="modal fade" id="myModalEdit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 				<div class="modal-dialog" style="color:black">
 					<div class="modal-content">
@@ -442,6 +472,28 @@ while($row = mysqli_fetch_array($data)){
 			</div>
 			</form>
 			
+			<?php
+				if($_SESSION['beAMember'] == 1){
+					echo "<script> 
+						document.getElementById('modal-body').innerHTML = '<b>You are now a member of Red Gloves Boxing Gym.</b>';
+						window.setTimeout(function() {
+						$('#myModal').modal('show');
+						},1000);
+					 </script>";
+					$_SESSION['beAMember'] = 0;
+				}
+				if($_SESSION['successEdit'] == 1){
+					echo "<script> 
+						document.getElementById('modal-body').innerHTML = '<b>Successfully updated your information.</b>';
+						window.setTimeout(function() {
+						$('#myModal').modal('show');
+						},1000);
+					 </script>";
+					$_SESSION['successEdit'] = 0;
+				}
+			?>
+			
+			
             <div class="panel-body">
               <div class="form-group">
 				<div class="col-xs-12" style="padding-left:50px;color:black;font-size: 17px; font-family: 'Roboto', sans-serif; font-weight: 500;"> 
@@ -707,47 +759,9 @@ while($row = mysqli_fetch_array($data)){
 						}else{
 							$expirationDate = '';
 						}
-						
-						if($rates == '8 sessions'){
-							if($ACount == 7){
-								print("
-									<form action=\"successattend.php\" method=\"post\" onsubmit=\"alert('This will be your last session. Promo Expired!');\">
-								");
-							}else{
-								print("
-									<form action=\"successattend.php\" method=\"post\" >
-								");							
-							}
-						}else if($rates == '12 sessions'){
-							if($ACount == 7){
-								print("
-									<form action=\"successattend.php\" method=\"post\" onsubmit=\"alert('This will be your last session. Promo Expired!');\">
-								");
-							}else{
-								print("
-									<form action=\"successattend.php\" method=\"post\" >
-								");
-							}
-						}else if($rates == 'monthly' || $rates == 'student monthly'){
-							$dateNow = date('Y-m-d');
-							$date = (strtotime($expirationDate1) - strtotime($dateNow)) / (60 * 60 * 24);
-							if($date <= 1){
-								print("
-									<form action=\"successattend.php\" method=\"post\" onsubmit=\"alert('This will be the last day of your subscription.');\">
-								");
-							}else if($date <= 5){
-								print("
-									<form action=\"successattend.php\" method=\"post\" onsubmit=\"alert('You only have $date days before your subscription expires.');\">
-								");
-							}else{
-								print("
-									<form action=\"successattend.php\" method=\"post\">
-								");
-							}
-							
-						}
-						print("
-								<div class=\"container\">
+
+						print("<form action=\"successattend.php\" method=\"post\">
+								<div class=\"container\" >
 									<div class=\"col-xs-6\" style=\"color:black;padding:50px\">
  									<table class=\"table table-hover\">
 										<tr>	
@@ -763,22 +777,73 @@ while($row = mysqli_fetch_array($data)){
 											<td>$expirationDate</td>
 										</tr>
 									</table>
-</div>									
+									</div>									
 								</div>
+								
 								
 								<!-- Modal Footer -->
 								<div class=\"modal-footer\">
-									<input class=\"btn btn-danger\" type=\"submit\" value=\"PROCEED\" name=\"proceed\" id=\"proceed_button\">
+									<input class=\"btn btn-danger\" type=\"submit\" value=\"PROCEED\" name=\"proceed\" id=\"proceed_button\" >
 								</div>
 							</form>
 						");
-					}						
+					}	if($_SESSION['success'] == 'true'){
+							
+							if($rates == '8 sessions'){
+								if($ACount == 7){
+									echo "<script> 
+										document.getElementById('modal-body').innerHTML = '<b>You only have 1 session left before your subscription expires.</b><br><br>Register again to a promo/rate <br>to enjoy the services of the gym.';
+										window.setTimeout(function() {
+											$('#myModal').modal('show');
+										},1000);
+									  </script>";
+								}
+							}else if($rates == '12 sessions'){
+								if($ACount == 11){
+									echo "<script> 
+										document.getElementById('modal-body').innerHTML = '<b>You only have 1 session left before your subscription expires.</b><br><br>Register again to a promo/rate <br>to enjoy the services of the gym.';
+										window.setTimeout(function() {
+											$('#myModal').modal('show');
+										},1000);
+									  </script>";
+								}
+							}else if($rates == 'monthly' || $rates == 'student monthly'){
+								$dateNow = date('Y-m-d');
+								$date = (strtotime($expirationDate1) - strtotime($dateNow)) / (60 * 60 * 24);
+								if($date == 0){
+									echo "<script> 
+										document.getElementById('modal-body').innerHTML = '<b>Your promo subscription will expire today.</b><br><br>Register again to a promo/rate <br>to enjoy the services of the gym.';
+										window.setTimeout(function() {
+											$('#myModal').modal('show');
+										},1000);
+									  </script>";
+								}else if($date <= 5){
+									echo "<script> 
+										document.getElementById('modal-body').innerHTML = '<b>Your promo subscription will expire in ".$date." day/s.</b><br><br>Register again to a promo/rate <br>to enjoy the services of the gym.';
+										window.setTimeout(function() {
+											$('#myModal').modal('show');
+										},1000);
+									  </script>";
+								}
+								
+							}else if($_SESSION['regular'] != 1){
+								echo "<script> 
+										document.getElementById('modal-body').innerHTML = '<b>Your promo subscription expires.</b><br><br>Register again to a promo/rate <br>to enjoy the services of the gym.';
+										window.setTimeout(function() {
+											$('#myModal').modal('show');
+										},1000);
+									  </script>";
+							
+							}
+						}
+						
+					
 				?>	
 						
 			</div>
 		</div>
 	</div>
-							
+	
 					
 	
 	 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -796,11 +861,13 @@ while($row = mysqli_fetch_array($data)){
 				</script>
 				
 			";
+			
 			$_SESSION['success'] = 'false';
 		}
+		
 	?>
 	
-	<script>
+	<script type="text/javascript">
 		
 	
 		function updateValue(){

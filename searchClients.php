@@ -48,14 +48,14 @@ if($username == ''){
 							<?php
 								if($_SESSION['role'] == 'admin'){
 									echo "
-										<li><a href=\"staffProfile.php\" style=\"color:white\">Profile</a></li>
+										<li><a href=\"staffProfile.php\" style=\"color:white\">Home</a></li>
 										<li class=\"active\" ><a href=\"searchClients.php\" style=\"color:white\">Clients</a></li>
 										<li><a href=\"editStaff.php\" style=\"color:white\">Staff</a></li>
 										<li><a href=\"adminInventory.php\" style=\"color:white\">Admin</a></li>
 									";
 								}else{
 									echo "
-										<li><a href=\"staffProfile.php\" style=\"color:white\">Profile</a></li>
+										<li><a href=\"staffProfile.php\" style=\"color:white\">Home</a></li>
 										<li class=\"active\" ><a href=\"searchClients.php\" style=\"color:white\">Clients</a></li>
 										<li><a href=\"staffInventory.php\" style=\"color:white\">Inventory</a></li>
 									";

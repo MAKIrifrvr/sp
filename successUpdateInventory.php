@@ -12,7 +12,7 @@ if (isset($_POST['addInventory'])) {
 	$date = date("Y-m-d");
 	
 	
-	
+	$_SESSION['addInventory'] = 1;
 	$sql = "INSERT INTO inventory VALUES ('$date','$category','$username','$description','$amount')";
 	mysqli_query($connection, $sql);
 	

@@ -11,13 +11,13 @@ if (isset($_POST['create'])) {
 	
 	$sql = "INSERT INTO staff VALUES ('$admin','$username','$password','$name')";
 	mysqli_query($connection, $sql);
-	
+	$_SESSION['addStaff'] = 1;
 }else if (isset($_POST['create1'])) {
 	$username = $_POST['deleteUsername'];
 	
 	$sql = "DELETE FROM staff where username='$username'";
 	mysqli_query($connection, $sql);
-
+	$_SESSION['deleteStaff'] = 1;
 }
 header("Location:editStaff.php");
 exit;

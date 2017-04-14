@@ -9,7 +9,6 @@ if($username == ''){
 	header("Location:index.php");
 	exit;
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -47,7 +46,7 @@ if($username == ''){
             		<!-- Collect the nav links, forms, and other content for toggling -->
             		<div class="collapse navbar-collapse" id="menu">
             			<ul class="nav navbar-nav navbar-right">
-            				  <li class="active" ><a href="" style="color:white">Profile</a></li>
+            				  <li class="active" ><a href="" style="color:white">Home</a></li>
 							  <li ><a href="searchClients.php" style="color:white">Clients</a></li>
 							  <?php
 								if($_SESSION['role'] == 'admin'){
@@ -108,8 +107,6 @@ if($username == ''){
 							
 						</tbody>
 					</table>
-				
-				
 				</div>
 			</div>
 		</div>
@@ -187,18 +184,7 @@ if($username == ''){
 			</div>
 		</div>
 	</div>
-	
-	
-	
-	
-	
 
-	
-
-	
-	
-	
-	
 	 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->

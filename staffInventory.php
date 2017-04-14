@@ -46,7 +46,7 @@ if($username == ''){
             		<!-- Collect the nav links, forms, and other content for toggling -->
             		<div class="collapse navbar-collapse" id="menu">
             			<ul class="nav navbar-nav navbar-right">
-            				  <li ><a href="staffProfile.php" style="color:white">Profile</a></li>
+            				  <li ><a href="staffProfile.php" style="color:white">Home</a></li>
 							  <li ><a href="searchClients.php" style="color:white">Clients</a></li>
 							  <li class="active"><a href="staffInventory.php" style="color:white">Inventory</a></li>
 							  <li ><a href="index.php" style="color:white">Logout</a></li>
@@ -59,6 +59,22 @@ if($username == ''){
 		</nav>
     </div> 
 	
+	<div class="modal fade bs-example-modal-sm" id="myModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+	  <div class="modal-dialog modal-sm" role="document">
+		<div class="modal-content">
+		  <div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h4 class="modal-title" id="myModalLabel"></h4>
+		  </div>
+		  <div class="modal-body" id="modal-body">
+		
+		  </div>
+		  <div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		  </div>
+		</div>
+	  </div>
+	</div>
 	
 	<div class="panel panel-primary" id="panel1" style=" margin-left: auto; margin-right: auto; width: 8in;background-color: #fdfdfd; margin-top:150px;height:auto">
         <div class="panel-heading" style="height:53px">
@@ -155,7 +171,7 @@ if($username == ''){
 				</div>
 				<div class="container" style="color:black">
 					<div class="col-xs-6" style="padding:40px;">
-						<form class="form-horizontal" name="buttonprofile" action="successUpdateInventory.php" method="post" onsubmit="alert('successfully added an item to the inventory.');">
+						<form class="form-horizontal" name="buttonprofile" action="successUpdateInventory.php" method="post">
 							
 							<div class="col-xs-12" style="padding-bottom:20px">
 								<label style="color:black">Revenue / Expenses:</label>
@@ -176,6 +192,19 @@ if($username == ''){
 								<input class="btn btn-warning" type="submit" id="addInventory" name="addInventory">
 							</div>
 						</form>
+						<?php
+						if($_SESSION['addInventory'] == 1){
+							$_SESSION['addInventory'] = 0;
+							echo "<script> 
+								document.getElementById('modal-body').innerHTML = '<b>Successfully added an item to the inventory.</b>';
+								window.setTimeout(function() {
+									$('#myModal').modal('show');
+								},1000);
+							 </script>";
+						
+						}
+					
+					?>
 					</div>
 				</div>
 			</div>

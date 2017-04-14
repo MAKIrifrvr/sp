@@ -38,7 +38,7 @@ if(mysqli_connect_error()) echo "Connection Fail";
 			pregnancy='$pregnancy',asthma='$asthma',blood_cholesterol='$blood_cholesterol',hernia='$hernia',family_problem='$family_problem',relationship='$relationship' WHERE username='$oldusername'";	
 		
 		mysqli_query($connection, $sql);
-		
+		$_SESSION['successEdit'] = 1;
 		$_SESSION['username'] = $oldusername;
 		header("Location: profile.php");
 		exit;

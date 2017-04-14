@@ -7,6 +7,7 @@ if(mysqli_connect_error()) echo "Connection Fail";
 	$_SESSION['expenses'] = 0;
 $username = $_SESSION['username'];
 
+
 if($username == ''){
 	header("Location:index.php");
 	exit;
@@ -48,7 +49,7 @@ if($username == ''){
             		<!-- Collect the nav links, forms, and other content for toggling -->
             		<div class="collapse navbar-collapse" id="menu">
             			<ul class="nav navbar-nav navbar-right">
-            				  <li ><a href="staffProfile.php" style="color:white">Profile</a></li>
+            				  <li ><a href="staffProfile.php" style="color:white">Home</a></li>
 							  <li ><a href="searchClients.php" style="color:white">Clients</a></li>
 							  <li ><a href='editStaff.php' style='color:white'>Staff</a></li>
 							  <li class="active"><a href="adminInventory.php" style="color:white">Admin</a></li>
@@ -62,7 +63,22 @@ if($username == ''){
 			<!-- /.container -->
 		</nav>
     </div> 
-	
+	<div class="modal fade bs-example-modal-sm" id="myModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+	  <div class="modal-dialog modal-sm" role="document">
+		<div class="modal-content">
+		  <div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h4 class="modal-title" id="myModalLabel"></h4>
+		  </div>
+		  <div class="modal-body" id="modal-body">
+		
+		  </div>
+		  <div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		  </div>
+		</div>
+	  </div>
+	</div>
 	<div class="panel panel-primary" id="panel1" style=" margin-left: auto; margin-right: auto; width: 8in;background-color: #fdfdfd; margin-top:150px;height:auto">
         <div class="panel-heading" style="height:53px">
 			<div style="float:left;margin-top:5px"> INVENTORY </div>
@@ -174,9 +190,12 @@ if($username == ''){
 								if($_POST['startdate']!='' && $_POST['enddate']!=''){
 									$startdate = date("Y-m-d",strtotime($_POST['startdate']));
 									$enddate = date("Y-m-d",strtotime($_POST['enddate']));
+									$_SESSION['startdate1'] = $startdate;
+									$_SESSION['enddate1'] = $enddate;
 									$sql = "SELECT * FROM inventory WHERE date BETWEEN '$startdate' AND '$enddate'";
 								}else if($_POST['dailyDate']!=''){
 									$startdate = $_POST['dailyDate'];
+									$_SESSION['daily'] = $startdate;
 									$sql = "SELECT * FROM inventory WHERE date='$startdate'";								
 								}else if($_POST['weeklyDate']!=''){
 									$startdate = explode('-',$_POST['weeklyDate']);
@@ -187,11 +206,16 @@ if($username == ''){
 									date_isodate_set($date, $year, $week);
 									$startDay = (date_format($date, 'Y-m-d'));
 									$endDay = date('Y-m-d', strtotime("+6 day", strtotime($startDay)));
+									$_SESSION['startDay'] = $startDay;
+									$_SESSION['endDay'] = $endDay;
 									$sql = "SELECT * FROM inventory WHERE date BETWEEN '$startDay' AND '$endDay' ";									
 								}else if($_POST['monthlyDate']!=''){
+
 									$startdate = explode('-',$_POST['monthlyDate']);
 									$year = $startdate[0];
 									$month = $startdate[1];
+									$_SESSION['year'] = $year;
+									$_SESSION['month'] = $month;								
 									$sql = "SELECT * FROM inventory WHERE Year(date) = '$year' and Month(Date) = '$month'";
 								}else if($_POST['quarterlyDate2']!='' && $_POST['quarterlyDate1']!=''){
 									$date1 = '';
@@ -209,11 +233,16 @@ if($username == ''){
 										$date1 = '10';
 										$date2 = '12';
 									}
+									$_SESSION['date1'] = $date1;
+									$_SESSION['date2'] = $date2;
 									$year = $_POST['quarterlyDate2'];
+									$_SESSION['year'] = $year;
 									$sql = "SELECT * FROM inventory WHERE Year(Date) = '$year' and Month(Date) BETWEEN '$date1' AND '$date2'";
 								}else if($_POST['yearlyDate']!=''){
-									$startdate = $_POST['yearlyDate'];
-									$sql = "SELECT * FROM inventory WHERE YEAR(date)='$startdate'";
+									
+									$yearly = $_POST['yearlyDate'];
+									$_SESSION['annual'] = $yearly;
+									$sql = "SELECT * FROM inventory WHERE YEAR(date)='$yearly'";
 								}
 								
 								if($sql!=''){
@@ -258,6 +287,10 @@ if($username == ''){
 							<td>TOTAL EXPENSES: </td>
 							<td><?php echo $_SESSION['expenses'];?> pesos </td>
 							</tr>
+							<tr>
+							<td>NET INCOME: </td>
+							<td><?php echo ($_SESSION['revenue'] - $_SESSION['expenses']);?> pesos </td>
+							</tr>
 						</tbody>
 					</table>
 				</div>
@@ -280,7 +313,7 @@ if($username == ''){
 				</div>
 				<div class="container" style="color:black">
 					<div class="col-xs-6" style="padding:40px;">
-						<form class="form-horizontal" name="buttonprofile" action="successUpdateInventory.php" method="post" onsubmit="alert('successfully added an item to the inventory.');">
+						<form class="form-horizontal" name="buttonprofile" action="successUpdateInventory.php" method="post">
 							
 							<div class="col-xs-12" style="padding-bottom:20px">
 								<label style="color:black">Revenue / Expenses:</label>
@@ -301,59 +334,23 @@ if($username == ''){
 								<input class="btn btn-warning" type="submit" id="addInventory" name="addInventory" onclick="myFunction()">
 							</div>
 						</form>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	
-	<div class="panel panel-primary" id="panel1" style=" margin-left: auto; margin-right: auto; width: 8in;background-color: #fdfdfd; margin-top:50px;height:auto;">
-        <div class="panel-heading" style="height:53px">
-			<div style="float:left;margin-top:5px"> CALENDAR </div> 
-		</div>
-		<div class="panel-body">
-			<div class="form-group yui3-skin-sam yui3-g">
-				<div class="col-xs-12">
-					<div class="col-xs-6 yui3-u">
-						 <!-- Container for the calendar -->
-						 <div id="mycalendar" class="yui3-skin-sam"></div>
-					</div>
-					<div class="col-xs-6 yui3-u">
-					   <div id="links" style="padding-left:20px;">
-							<form name="myForm" id="myForm" method="post">
-								<input type="text" id="selecteddate" name="selecteddate" style="display:none"> 
-								<input type="button" id="luh" onclick="SubmitFormData()" style="display:none">	
-							</form>						
-					   </div>
-					   
-						<div id="maki" style="padding:10px;margin-left:20pxfont-size: 16px;font-family: 'Roboto', sans-serif;font-weight: 600;">
-							<!--<div class='col-xs-12' style="padding-left:50px">STATISTICS</div>
-							<div class='col-xs-6'>Attendance:</div><div class='col-xs-6'>0</div>
-							<div class='col-xs-6'>Revenue:</div><div class='col-xs-6'>0</div>
-							<div class='col-xs-6'>Expenses:</div><div class='col-xs-6'>0</div>-->
-							<div class='col-xs-12' style="padding-left:100px;margin-top:40px;margin-bottom:10px">STATISTICS</div>
-							<table class="table table-hover">
 						
-								<tbody>
-									<tr>
-									<td>ATTENDANCE:</td><td>0</td>
-									</tr>
-									<tr>
-									<td>REVENUE:</td><td>0</td>
-									</tr>
-									<tr>
-									<td>EXPENSES:</td><td>0</td>
-									</tr>
-								</TBODY>
-							</table>
-						</div>
+						<?php
+						if($_SESSION['addInventory'] == 1){
+							$_SESSION['addInventory'] = 0;
+							echo "<script> 
+									document.getElementById('modal-body').innerHTML = '<b>Successfully added an item to the inventory.</b>';
+									window.setTimeout(function() {
+										$('#myModal').modal('show');
+									},1000);
+								  </script>";
+						}
+						?>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-
-	
 	
 	<div class="panel panel-primary" id="panel1" style=" margin-left: auto; margin-right: auto; width: 8in;background-color: #fdfdfd; margin-top:50px;height:auto;margin-bottom:100px">
         <div class="panel-heading" style="height:53px">
@@ -420,10 +417,23 @@ if($username == ''){
 								<input type="number" name="value" id="value" value="" class = "form-control" min="0" required>
 							</div>
 							<div class="col-xs-12" style="padding-bottom:20px">
-								<input class="btn btn-danger" type="submit" name="editrates" id="editrates" value="SUBMIT" style="width:200px;margin-left:250px" onclick="myFunction1()">
+								<input class="btn btn-danger" type="submit" name="editrates" id="editrates" value="SUBMIT" style="width:200px;margin-left:240px">
 								<label style="color:black"></label>
 							</div>
 					</form>
+					
+					<?php
+						if($_SESSION['successEditRates'] == 1){
+							echo "<script> 
+								document.getElementById('modal-body').innerHTML = '<b>Successfully updated the promos.</b>';
+								window.setTimeout(function() {
+									$('#myModal').modal('show');
+								},1000);
+							 </script>";
+						
+						}
+					
+					?>
 			</div>
 		</div>
 	</div>
@@ -434,41 +444,9 @@ if($username == ''){
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/bootstrap.min.js"></script>
 	<script src="http://yui.yahooapis.com/3.18.1/build/yui/yui-min.js"></script>
-	<script type="text/javascript">
 
-
-
-YUI().use('calendar', 'datatype-date', 'cssbutton',  function(Y) {
-
-     var calendar = new Y.Calendar({
-      contentBox: "#mycalendar",
-      width:'340px',
-      showPrevMonth: true,
-      showNextMonth: true,
-      date: new Date()}).render();
-
-    // Get a reference to Y.DataType.Date
-    var dtdate = Y.DataType.Date;
-
-    // Listen to calendar's selectionChange event.
-    calendar.on("selectionChange", function (ev) {
-      var newDate = ev.newSelection[0];
-	  document.getElementById('selecteddate').value = dtdate.format(newDate); 
-	  document.getElementById('luh').click();
-    });
-});
-
-</script>
 
 <script>
-function SubmitFormData() {
-    var name = document.getElementById('selecteddate').value;
-    $.post("getValue.php", { name: name},
-	function(data) {
-	 $('#maki').html(data);
-	 $('#myForm')[0].reset();
-    });
-}
 
 function checkMem(){
 	if(document.getElementById('promos').value == 'membership_fee'){

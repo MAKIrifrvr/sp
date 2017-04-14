@@ -16,6 +16,7 @@ if(mysqli_connect_error()) echo "Connection Fail";
 			if($ACount >= 8){
 				$attendance = "UPDATE clients SET rates=null, date_of_promos=null, staff_register=null, attendance_count=0 WHERE username='$username'";
 				$attendance1= mysqli_query($connection,$attendance);
+				
 			}else {			
 				$attendance = "UPDATE clients SET attendance_count=$ACount WHERE username='$username'";
 				$attendance1= mysqli_query($connection,$attendance);
@@ -51,8 +52,8 @@ if(mysqli_connect_error()) echo "Connection Fail";
 				$at = date('Y-m-d', strtotime("last day of next month",strtotime($dateOfPromo)));
 				$_SESSION['expDate'] = date('M/d/Y', strtotime("last day of next month",strtotime($dateOfPromo)));
 			}
-			
-			if(strtotime($at) <= strtotime('today')){
+			$t = date("H");
+			if(((strtotime($at) - strtotime('today'))/ (60 * 60 * 24)) == 0 && ($t >="23")){
 				$attendance = "UPDATE clients SET rates=null, date_of_promos=null, staff_register=null, attendance_count=0  WHERE username='$username'";
 				$attendance1= mysqli_query($connection,$attendance);
 			}else{
@@ -68,10 +69,14 @@ if(mysqli_connect_error()) echo "Connection Fail";
 		$staff_username = $_POST['staff_username'];
 		$ACount = '1';
 	
-		if($rates != 'regular'){
+		if($rates == 'regular'){
+			$_SESSION['regular'] = 1;
+		}else{
+		$_SESSION['regular'] = 0;
 			$reg = "UPDATE clients SET rates='$rates', date_of_membership=null, attendance_count=$ACount, date_of_promos='$date', staff_register='$staff_username' WHERE username='$username'";
 			$reg1= mysqli_query($connection,$reg);		
 		}
+		
 		$attendance = "INSERT INTO attendance_log VALUES ('$username','$date','$rates')";
 		$attendance1= mysqli_query($connection,$attendance);
 		

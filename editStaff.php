@@ -46,7 +46,7 @@ if($username == ''){
             		<!-- Collect the nav links, forms, and other content for toggling -->
             		<div class="collapse navbar-collapse" id="menu">
             			<ul class="nav navbar-nav navbar-right">
-            				  <li><a href="staffProfile.php" style="color:white">Profile</a></li>
+            				  <li><a href="staffProfile.php" style="color:white">Home</a></li>
 							  <li ><a href="searchClients.php" style="color:white">Clients</a></li>
 							  <li  class="active" ><a href="editStaff.php" style="color:white">Staff</a></li>
 							  <li ><a href="adminInventory.php" style="color:white">Admin</a></li>
@@ -60,6 +60,22 @@ if($username == ''){
 		</nav>
     </div> 
 	
+	<div class="modal fade bs-example-modal-sm" id="myModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+	  <div class="modal-dialog modal-sm" role="document">
+		<div class="modal-content">
+		  <div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h4 class="modal-title" id="myModalLabel"></h4>
+		  </div>
+		  <div class="modal-body" id="modal-body">
+		
+		  </div>
+		  <div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		  </div>
+		</div>
+	  </div>
+	</div>
 
 	<div class="container" style="margin-top:150px;margin-left:270px">
     	<div class="row">
@@ -101,7 +117,25 @@ if($username == ''){
 											</form>
 										</tr>
 									";
-								}								
+								}
+
+								if($_SESSION['deleteStaff'] == 1){
+									$_SESSION['deleteStaff'] = 0;
+									echo "<script> 
+										document.getElementById('modal-body').innerHTML = '<b>Successfully deleted a staff acount.</b>';
+										window.setTimeout(function() {
+											$('#myModal').modal('show');
+										},1000);
+									  </script>";
+								}else if($_SESSION['addStaff'] == 1){
+									$_SESSION['addStaff'] = 0;
+									echo "<script> 
+										document.getElementById('modal-body').innerHTML = '<b>Successfully added a staff acount.</b>';
+										window.setTimeout(function() {
+											$('#myModal').modal('show');
+										},1000);
+									  </script>";
+								}
 							?>
 							
 						</tbody>
@@ -126,7 +160,7 @@ if($username == ''){
 				</div>
 				<div class="container" style="color:black">
 					<div class="col-xs-6" style="padding:40px;">
-						<form class="form-horizontal" name="buttonprofile" action="successUpdateStaff.php" method="post" onsubmit="return confirm('Do you really want to add new staff/admin?');">
+						<form class="form-horizontal" name="buttonprofile" action="successUpdateStaff.php" method="post">
 							
 							<div class="col-xs-12" style="padding-bottom:20px">
 								<label style="color:black">Admin/Staff:</label>
