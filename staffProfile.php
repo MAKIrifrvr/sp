@@ -87,9 +87,9 @@ if($username == ''){
 							<?php
 								$sql = "SELECT * FROM promo_almost_expired WHERE 1";
 								$data= mysqli_query($connection,$sql);
-								date_default_timezone_set("Asia/Manila");
 								
-								while($row = mysqli_fetch_array($data)){
+								if($data){
+									while($row = mysqli_fetch_array($data)){
 										echo "
 											<tr>	
 												<td>".$row['username']."</td>
@@ -98,7 +98,7 @@ if($username == ''){
 											</tr>
 										";
 									}
-								
+								}
 							?>
 							
 						</tbody>
