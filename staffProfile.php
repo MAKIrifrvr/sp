@@ -66,7 +66,49 @@ if($username == ''){
 			<!-- /.container -->
 		</nav>
     </div> 
+	
+	
 	<div class="panel panel-primary" id="panel1" style=" margin-left: auto; margin-right: auto; width: 8in;background-color: #fdfdfd; margin-top:150px;height:auto">
+        <div class="panel-heading"  style="height:50px">
+			<div style="margin-top:4px">CLIENTS WITH APPROACHING PROMO EXPIRATION DATE </div>			
+		</div>		
+		<div class="panel-body">
+			<div class="form-group">
+				<div class="col-xs-12">
+					<table class="table table-hover">
+						<thead >
+							<tr>
+								<th>Username</th>
+								<th>Promo</th>
+								<th>Expiration</th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php
+								$sql = "SELECT * FROM promo_almost_expired WHERE 1";
+								$data= mysqli_query($connection,$sql);
+								date_default_timezone_set("Asia/Manila");
+								
+								while($row = mysqli_fetch_array($data)){
+										echo "
+											<tr>	
+												<td>".$row['username']."</td>
+												<td>".$row['rates']."</td>												
+												<td>".$row['expiration']."</td>
+											</tr>
+										";
+									}
+								
+							?>
+							
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="panel panel-primary" id="panel1" style=" margin-left: auto; margin-right: auto; width: 8in;background-color: #fdfdfd; margin-top:50px;height:auto">
         <div class="panel-heading"  style="height:50px">
 			<div style="margin-top:4px">TODAY'S ATTENDANCE </div>			
 		</div>		

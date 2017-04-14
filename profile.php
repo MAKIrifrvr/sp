@@ -678,6 +678,7 @@ while($row = mysqli_fetch_array($data)){
 					$count= mysqli_query($connection,$attendanceCount);
 					$ACount = mysqli_fetch_array($count)['attendance_count'];
 					$rates = mysqli_fetch_array($data)['rates'];
+					
 					$_SESSION['ACount'] = $ACount;
 					$_SESSION['rates'] = $rates;
 					if($rates == null){
@@ -797,6 +798,7 @@ while($row = mysqli_fetch_array($data)){
 											$('#myModal').modal('show');
 										},1000);
 									  </script>";
+									  
 								}
 							}else if($rates == '12 sessions'){
 								if($ACount == 11){

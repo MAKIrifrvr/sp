@@ -16,7 +16,8 @@ if(mysqli_connect_error()) echo "Connection Fail";
 			if($ACount >= 8){
 				$attendance = "UPDATE clients SET rates=null, date_of_promos=null, staff_register=null, attendance_count=0 WHERE username='$username'";
 				$attendance1= mysqli_query($connection,$attendance);
-				
+				$query1 = "DELETE FROM promo_almost_expired WHERE username='$username'";
+				mysqli_query($connection,$query1);
 			}else {			
 				$attendance = "UPDATE clients SET attendance_count=$ACount WHERE username='$username'";
 				$attendance1= mysqli_query($connection,$attendance);
@@ -29,6 +30,8 @@ if(mysqli_connect_error()) echo "Connection Fail";
 			if($ACount >= 12){
 				$attendance = "UPDATE clients SET rates=null, date_of_promos=null, staff_register=null, attendance_count=0 WHERE username='$username'";
 				$attendance1= mysqli_query($connection,$attendance);
+				$query1 = "DELETE FROM promo_almost_expired WHERE username='$username'";
+				mysqli_query($connection,$query1);
 			}else {				
 				$attendance = "UPDATE clients SET attendance_count=$ACount WHERE username='$username'";
 				$attendance1= mysqli_query($connection,$attendance);
@@ -56,6 +59,8 @@ if(mysqli_connect_error()) echo "Connection Fail";
 			if(((strtotime($at) - strtotime('today'))/ (60 * 60 * 24)) == 0 && ($t >="23")){
 				$attendance = "UPDATE clients SET rates=null, date_of_promos=null, staff_register=null, attendance_count=0  WHERE username='$username'";
 				$attendance1= mysqli_query($connection,$attendance);
+				$query1 = "DELETE FROM promo_almost_expired WHERE username='$username'";
+				mysqli_query($connection,$query1);
 			}else{
 				$attendance = "UPDATE clients SET attendance_count=$ACount WHERE username='$username'";
 				$attendance1= mysqli_query($connection,$attendance);

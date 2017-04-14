@@ -100,7 +100,64 @@ $_SESSION['fromSignup'] = 'false';
     </div> <!-- /.container -->
 </section>
 
+	<?php
+	date_default_timezone_set("Asia/Manila");
+		$query1 = "DELETE FROM promo_almost_expired WHERE 1";
+		mysqli_query($connection,$query1);
+		$sql = "SELECT * FROM clients WHERE 1";
+		$data= mysqli_query($connection,$sql);
+								
+		while($row = mysqli_fetch_array($data)){
+			$rates = $row['rates'];
+			$aCount = $row['attendance_count'];
+			$username = $row['username'];
+			$dateOfPromo = $row['date_of_promos'];
+			$currentDate = date("m",strtotime($dateOfPromo));
+			$nextMonth = date("m",strtotime($dateOfPromo." +1 month"));
+							
+			if($currentDate==$nextMonth-1){
+				$expirationDate = date('Y-m-d',strtotime($dateOfPromo." +1 month"));
+			}else{
+				$expirationDate = date('Y-m-d', strtotime("last day of next month",strtotime($dateOfPromo)));
+			}
+			
+			if($rates == '8 sessions'){
+				if($aCount == 6){
+					$q = "INSERT INTO promo_almost_expired VALUES ('$username','$rates','2 sessions left')";
+					$query = mysqli_query($connection,$q);
+				}else if($aCount == 7){
+					$q = "INSERT INTO promo_almost_expired VALUES ('$username','$rates','1 sessions left')";
+					$query = mysqli_query($connection,$q);
+				}	
+			}else if($rates == '12 sessions'){
+			
+				if($aCount == 10){
+					$q = "INSERT INTO promo_almost_expired VALUES ('$username','$rates','2 sessions left')";
+					$query = mysqli_query($connection,$q);
+				}else if($aCount == 11){
+					$q = "INSERT INTO promo_almost_expired VALUES ('$username','$rates','1 sessions left')";
+					$query = mysqli_query($connection,$q);
+				}	
+			}else if($rates == 'monthly' || $rates == 'student monthly'){
+				$dateNow = date('Y-m-d');
+				$date = (strtotime($expirationDate) - strtotime($dateNow)) / (60 * 60 * 24);			
+					if($date == 0){
+				
+					$q = "INSERT INTO promo_almost_expired VALUES ('$username','$rates','last day')";
+					$query = mysqli_query($connection,$q);
+				}else if($date == 1){
+					$q = "INSERT INTO promo_almost_expired VALUES ('$username','$rates','1 day left')";
+					$query = mysqli_query($connection,$q);
+				}else if($date == 2){
+					$q = "INSERT INTO promo_almost_expired VALUES ('$username','$rates','2 days left')";
+					$query = mysqli_query($connection,$q);
+				
+				}
+			}
+			
+		}
 	
+	?>
 
 	
 	
